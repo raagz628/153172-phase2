@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.cg.wallet.beans.Customer;
+import com.cg.wallet.beans.Wallet;
 
 public class WalletRepoImpl implements WalletRepo{
 
@@ -50,8 +51,7 @@ public class WalletRepoImpl implements WalletRepo{
 	public boolean save(Customer customer) {
 		if(findOne(customer.getMobileNo())==null)
 	{
-		String query="insert into Customer values("+"customer.getName()"+","
-	+"customer.getMobileNo()"+","+customer.getWallet().getBalance()+")";
+		String query="insert into Customer values('"+customer.getName()+"','"+customer.getMobileNo()+"',"+customer.getWallet().getBalance()+")";
 		try {
 			con.setAutoCommit(false);
 			Statement st=con.createStatement();
@@ -92,7 +92,10 @@ public class WalletRepoImpl implements WalletRepo{
 			{
 				cust.setName(rs.getString(1));
 				cust.setMobileNo(rs.getString(2));
-				cust.getWallet().setBalance(rs.getBigDecimal(3));
+				BigDecimal bal=rs.getBigDecimal(3);
+				Wallet wal=new Wallet();
+				wal.setBalance(bal);
+				cust.setWallet(wal);
 				count++;
 				
 			}
